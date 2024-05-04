@@ -2,22 +2,25 @@
 #include <string>
 
 #include "API.h"
-
-void log(const std::string& text) {
-    std::cerr << text << std::endl;
-}
+#include "mouseAI.h"
 
 int main(int argc, char* argv[]) {
-    log("Running...");
+
+    Mouse myMouse = {0, 0, 0, 1};
+
     API::setColor(0, 0, 'G');
-    API::setText(0, 0, "abc");
     while (true) {
         if (!API::wallLeft()) {
             API::turnLeft();
+            turnMouseLeft(myMouse);
         }
         while (API::wallFront()) {
             API::turnRight();
+            turnMouseRight(myMouse);
         }
+
+        API::setColor(myMouse.x, myMouse.y, 'G');
         API::moveForward();
+        moveMouse(myMouse);
     }
 }
