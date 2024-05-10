@@ -44,6 +44,13 @@ int main(void)
             case 'f':
                 break;
 
+            default:
+
+                API::turnRight();
+                turnMouseRight(myMouse);
+                API::turnRight();
+                turnMouseRight(myMouse);
+
         }
 
         API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
