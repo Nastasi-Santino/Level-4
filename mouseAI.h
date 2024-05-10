@@ -12,11 +12,14 @@ struct Position
     int y;
 };
 
+enum Orientation {RIGHT, LEFT, NORTH, SOUTH};
+
 struct Mouse
 {
     Position pos;
     int dx;
     int dy;
+    Orientation orientation;
 };
 
 struct MazeNode
@@ -36,5 +39,6 @@ void moveMouse(Mouse &mouse);
 void turnMouseLeft(Mouse &mouse);
 void turnMouseRight(Mouse &mouse);
 void initMaze(Maze &maze);
+char choseNextStep(Mouse &mouse, Maze &maze);
 
 #endif
