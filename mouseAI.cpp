@@ -186,7 +186,7 @@ static bool whereTo(Mouse &mouse, Position pos, char &c){
     }
 }
 
-char choseNextStep(Mouse &mouse, Maze &maze){
+char chooseNextStep(Mouse &mouse, Maze &maze){
 
     MazeNode * actualPosNode = &maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y];
 
@@ -205,5 +205,44 @@ char choseNextStep(Mouse &mouse, Maze &maze){
     }
     
     return returnDirection;
+}
 
+void floodFill(Mouse &mouse, Maze &maze, int x, int y)
+{
+     // Check if current cell is within maze bounds and not a wall or already visited
+    if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark != OPEN) {
+        return;
+    }
+    
+    // Mark current cell as visited
+    maze.nodes[x * MAZE_SIZE + y].mark = VISITED;
+
+    // Recursively explore neighboring cells
+    
+    // Check and move forward if no wall in front
+    if (!API::wallFront()) {
+        int newX = x + mouse.dx;
+        int newY = y + mouse.dy;
+        floodFill(mouse, maze, newX, newY);
+    }
+
+    // Check and turn left if no wall on the left
+    if (!API::wallLeft()) {
+        // Adjust mouse orientation accordingly
+        turnMouseLeft(mouse);
+        // Recursively explore in the new direction
+        floodFill(mouse, maze, x, y);
+        // Turn mouse back to original orientation after exploration
+        turnMouseRight(mouse);
+    }
+
+    // Check and turn right if no wall on the right
+    if (!API::wallRight()) {
+        // Adjust mouse orientation accordingly
+        turnMouseRight(mouse);
+        // Recursively explore in the new direction
+        floodFill(mouse, maze, x, y);
+        // Turn mouse back to original orientation after exploration
+        turnMouseLeft(mouse);
+    }
 }

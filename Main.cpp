@@ -27,7 +27,7 @@ int main(void)
         //     turnMouseRight(myMouse);
         // }
 
-        switch(choseNextStep(myMouse, myMaze)){
+        switch(chooseNextStep(myMouse, myMaze)){
 
             case 'l':
 

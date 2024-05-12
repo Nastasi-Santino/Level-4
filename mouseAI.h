@@ -35,10 +35,13 @@ struct Maze
     std::array<MazeNode, MAZE_SIZE * MAZE_SIZE> nodes;
 };
 
+enum CellState {WALL, OPEN, VISITED};
+
 void moveMouse(Mouse &mouse);
 void turnMouseLeft(Mouse &mouse);
 void turnMouseRight(Mouse &mouse);
 void initMaze(Maze &maze);
-char choseNextStep(Mouse &mouse, Maze &maze);
+char chooseNextStep(Mouse &mouse, Maze &maze);
+void floodFill(Mouse &mouse, Maze &maze, int x, int y);
 
 #endif
