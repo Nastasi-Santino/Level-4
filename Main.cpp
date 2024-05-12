@@ -46,6 +46,7 @@ int main(void)
 
             default:
 
+                myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
                 API::turnRight();
                 turnMouseRight(myMouse);
                 API::turnRight();

@@ -195,11 +195,13 @@ char chooseNextStep(Mouse &mouse, Maze &maze){
 
     for(auto &next : actualPosNode->neighbors){
 
-        int newMin;
-        if((newMin = maze.nodes[next.x * MAZE_SIZE + next.y].distanceToCenter) < min){
+        if(!maze.nodes[next.x * MAZE_SIZE + next.y].mark){
+            int newMin;
+            if((newMin = maze.nodes[next.x * MAZE_SIZE + next.y].distanceToCenter) < min){
 
-            if(whereTo(mouse, next, returnDirection)){
-                min = newMin;
+                if(whereTo(mouse, next, returnDirection)){
+                    min = newMin;
+                }
             }
         }
     }
@@ -207,15 +209,19 @@ char chooseNextStep(Mouse &mouse, Maze &maze){
     return returnDirection;
 }
 
+static bool isPosCenter(Position pos){
+    return (pos.x == 7 || pos.x == 8) && (pos.y == 7 || pos.y == 8);
+}
+
 void floodFill(Mouse &mouse, Maze &maze, int x, int y)
 {
      // Check if current cell is within maze bounds and not a wall or already visited
-    if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark != OPEN) {
+    if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark || isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos)) {
         return;
     }
     
     // Mark current cell as visited
-    maze.nodes[x * MAZE_SIZE + y].mark = VISITED;
+    maze.nodes[x * MAZE_SIZE + y].mark = true;
 
     // Recursively explore neighboring cells
     
