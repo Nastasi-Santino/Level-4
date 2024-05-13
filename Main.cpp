@@ -30,13 +30,11 @@ int main(void)
         switch(chooseNextStep(myMouse, myMaze)){
 
             case 'l':
-
                 API::turnLeft();
                 turnMouseLeft(myMouse);
                 break;
 
             case 'r':
-
                 API::turnRight();
                 turnMouseRight(myMouse);
                 break;
@@ -45,15 +43,15 @@ int main(void)
                 break;
 
             default:
-
+                // En este caso, el ratón encontró una pared en una celda adyacente
+                handleWallEncounter(myMouse, myMaze, myMouse.pos);
                 myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
                 API::turnRight();
                 turnMouseRight(myMouse);
                 API::turnRight();
                 turnMouseRight(myMouse);
-
         }
-
+        
         API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
         API::moveForward();
         moveMouse(myMouse);

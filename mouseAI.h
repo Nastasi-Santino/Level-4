@@ -43,5 +43,7 @@ void turnMouseRight(Mouse &mouse);
 void initMaze(Maze &maze);
 char chooseNextStep(Mouse &mouse, Maze &maze);
 void floodFill(Mouse &mouse, Maze &maze, int x, int y);
+void updateDistances(Maze &maze, Position pos, int distance);
+void handleWallEncounter(Mouse &mouse, Maze &maze, Position pos);
 
 #endif

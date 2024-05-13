@@ -252,3 +252,28 @@ void floodFill(Mouse &mouse, Maze &maze, int x, int y)
         turnMouseLeft(mouse);
     }
 }
+
+void updateDistances(Maze &maze, Position pos, int distance) {
+    // Verificar si la posición está dentro del laberinto y si la celda aún no ha sido visitada
+    if (pos.x < 0 || pos.x >= MAZE_SIZE || pos.y < 0 || pos.y >= MAZE_SIZE || maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter != -1) {
+        return;
+    }
+
+    // Actualizar la distancia al centro de la celda
+    maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter = distance;
+
+    // Propagar la actualización recursivamente a las celdas adyacentes
+    updateDistances(maze, {pos.x - 1, pos.y}, distance + 1); // Izquierda
+    updateDistances(maze, {pos.x + 1, pos.y}, distance + 1); // Derecha
+    updateDistances(maze, {pos.x, pos.y - 1}, distance + 1); // Arriba
+    updateDistances(maze, {pos.x, pos.y + 1}, distance + 1); // Abajo
+}
+
+// Función para manejar cuando el ratón encuentra una pared en una celda adyacente
+void handleWallEncounter(Mouse &mouse, Maze &maze, Position pos) {
+    // Actualizar las distancias al centro de las celdas adyacentes
+    updateDistances(maze, {pos.x - 1, pos.y}, 1); // Izquierda
+    updateDistances(maze, {pos.x + 1, pos.y}, 1); // Derecha
+    updateDistances(maze, {pos.x, pos.y - 1}, 1); // Arriba
+    updateDistances(maze, {pos.x, pos.y + 1}, 1); // Abajo
+}
