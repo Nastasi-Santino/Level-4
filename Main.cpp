@@ -44,7 +44,7 @@ int main(void)
 
             default:
                 // En este caso, el ratón encontró una pared en una celda adyacente
-                handleWallEncounter(myMouse, myMaze, myMouse.pos);
+                handleWallEncounter(myMouse, myMaze);
                 myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
                 API::turnRight();
                 turnMouseRight(myMouse);

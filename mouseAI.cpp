@@ -270,10 +270,10 @@ void updateDistances(Maze &maze, Position pos, int distance) {
 }
 
 // Función para manejar cuando el ratón encuentra una pared en una celda adyacente
-void handleWallEncounter(Mouse &mouse, Maze &maze, Position pos) {
+void handleWallEncounter(Mouse &mouse, Maze &maze) {
     // Actualizar las distancias al centro de las celdas adyacentes
-    updateDistances(maze, {pos.x - 1, pos.y}, 1); // Izquierda
-    updateDistances(maze, {pos.x + 1, pos.y}, 1); // Derecha
-    updateDistances(maze, {pos.x, pos.y - 1}, 1); // Arriba
-    updateDistances(maze, {pos.x, pos.y + 1}, 1); // Abajo
+    updateDistances(maze, {mouse.pos.x - 1, mouse.pos.y}, 1); // Izquierda
+    updateDistances(maze, {mouse.pos.x + 1, mouse.pos.y}, 1); // Derecha
+    updateDistances(maze, {mouse.pos.x, mouse.pos.y - 1}, 1); // Arriba
+    updateDistances(maze, {mouse.pos.x, mouse.pos.y + 1}, 1); // Abajo
 }
