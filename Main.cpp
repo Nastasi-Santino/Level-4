@@ -12,6 +12,10 @@ int main(void)
     Mouse myMouse = {{0, 0}, 0, 1, NORTH};
     Maze myMaze;
     bool noExitPath = false;
+    Position pivot;
+    int pivotCount = 0;
+    bool pivotActivated = false;
+    int pivotCheck = 0;
 
     initMaze(myMaze);
 
@@ -23,6 +27,10 @@ int main(void)
                 noExitPath = false;
                 API::turnLeft();
                 turnMouseLeft(myMouse);
+                if(!pivotActivated){
+                    pivotActivated = true;
+                    pivot = {myMouse.pos.x + myMouse.dx, myMouse.pos.y + myMouse.dy};
+                }
                 break;
 
             case 'r':
@@ -50,5 +58,22 @@ int main(void)
         API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
         API::moveForward();
         moveMouse(myMouse);
+        if(pivotActivated){
+            pivotCheck++;
+            if(myMouse.pos.x == pivot.x && myMouse.pos.y == pivot.y){
+                pivotCount++;
+                pivotCheck = 0;
+            }
+            if(pivotCount == 4){
+                pivotCount = 0;
+                pivotActivated = false;
+                myMaze.nodes[pivot.x * MAZE_SIZE + pivot.y].mark = true;
+            }
+            if(pivotCheck == 10){
+                pivotCount = 0;
+                pivotActivated = false;
+
+            }
+        }
     }
 }
