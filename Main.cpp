@@ -36,6 +36,33 @@ int main(void)
         if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[SOUTH]){
             API::setWall(myMouse.pos.x, myMouse.pos.y, 's');
         }
+
+        // if(API::wallFront()){
+        //     int dist = 0;
+        //     Orientation mouseOrient = myMouse.orientation;
+        //     turnMouseLeft(myMouse);
+        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
+        //     while(myMouse.orientation != mouseOrient){
+        //         turnMouseRight(myMouse);
+        //     }
+        //     turnMouseLeft(myMouse);
+        //     turnMouseLeft(myMouse);
+        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
+        //     while(myMouse.orientation != mouseOrient){
+        //         turnMouseRight(myMouse);
+        //     }
+        //     turnMouseRight(myMouse);
+        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
+        //     while(myMouse.orientation != mouseOrient){
+        //         turnMouseRight(myMouse);
+        //     }
+        //     for(int i = 0; i < MAZE_SIZE; i++){
+        //         for(int j = 0; j < MAZE_SIZE; j++){
+        //             cerr << myMaze.nodes[i * MAZE_SIZE + j].distanceToCenter << "  ";
+        //         }
+        //         cerr << endl;
+        //     }
+        // }
         
         switch(chooseNextStep(myMouse, myMaze)){
 

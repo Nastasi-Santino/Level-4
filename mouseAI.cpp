@@ -1,5 +1,6 @@
 #include "mouseAI.h"
 #include "API.h"
+#include <iostream>
 
 void moveMouse(Mouse &mouse)
 {
@@ -390,48 +391,85 @@ static bool isPosCenter(Position pos)
     return (pos.x == 7 || pos.x == 8) && (pos.y == 7 || pos.y == 8);
 }
 
-void floodFill(Mouse &mouse, Maze &maze, int x, int y)
+bool floodFill(Mouse &mouse, Maze &maze, int x, int y, int &dist)
 {
     // Check if current cell is within maze bounds and not a wall or already visited
     if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark || isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos))
     {
-        return;
+        if(isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos)){
+            dist = 0;
+            return true;
+        } else{
+            return false;
+        }
     }
 
-    // Mark current cell as visited
-    maze.nodes[x * MAZE_SIZE + y].mark = true;
+    if((x == 7 || x == 8) && mouse.dx != 0){
+        if(y < 7){
+            while(mouse.dy != 1){
+                turnMouseLeft(mouse);
+            }
+        } else {
+            while(mouse.dy != -1){
+                turnMouseLeft(mouse);
+            }
+        }
+    }
 
-    // Recursively explore neighboring cells
+    if((y == 7 || y == 8) && mouse.dy != 0){
+        if(x < 7){
+            while(mouse.dx != 1){
+                turnMouseLeft(mouse);
+            }
+        } else {
+            while(mouse.dx != -1){
+                turnMouseLeft(mouse);
+            }
+        }
+    }
 
     // Check and move forward if no wall in front
-    if (!API::wallFront())
+    if (!maze.nodes[x * MAZE_SIZE + y].walls[mouse.orientation])
     {
         int newX = x + mouse.dx;
         int newY = y + mouse.dy;
-        floodFill(mouse, maze, newX, newY);
-    }
-
-    // Check and turn left if no wall on the left
-    if (!API::wallLeft())
-    {
+        if(floodFill(mouse, maze, newX, newY, dist)){
+            maze.nodes[newX * MAZE_SIZE + newY].distanceToCenter = dist++;
+            return true;
+        } else {
+            return false;
+        }
+    } else if (!maze.nodes[x * MAZE_SIZE + y].walls[relativeOrientationToReal(mouse, LEFT)]){
         // Adjust mouse orientation accordingly
         turnMouseLeft(mouse);
         // Recursively explore in the new direction
-        floodFill(mouse, maze, x, y);
+        int newX = x + mouse.dx;
+        int newY = y + mouse.dy;
+        if(floodFill(mouse, maze, newX, newY, dist)){
+            maze.nodes[newX * MAZE_SIZE + newY].distanceToCenter = dist++;
+            return true;
+        } else {
+            return false;
+        }
         // Turn mouse back to original orientation after exploration
-        turnMouseRight(mouse);
-    }
-
-    // Check and turn right if no wall on the right
-    if (!API::wallRight())
-    {
+        // turnMouseRight(mouse);
+    } else if (!maze.nodes[x * MAZE_SIZE + y].walls[relativeOrientationToReal(mouse, RIGHT)]){
         // Adjust mouse orientation accordingly
         turnMouseRight(mouse);
         // Recursively explore in the new direction
-        floodFill(mouse, maze, x, y);
+        int newX = x + mouse.dx;
+        int newY = y + mouse.dy;
+        if(floodFill(mouse, maze, newX, newY, dist)){
+            maze.nodes[newX * MAZE_SIZE + newY].distanceToCenter = dist++;
+            return true;
+        } else {
+            return false;
+        }
         // Turn mouse back to original orientation after exploration
-        turnMouseLeft(mouse);
+        // turnMouseLeft(mouse);
     }
+
+    return false;
 }
 
 void updateDistances(Maze &maze, Position pos, int distance)
