@@ -13,13 +13,13 @@ void turnMouseLeft(Mouse &mouse)
     {
         mouse.dx = -mouse.dy;
         mouse.dy = 0;
-        mouse.orientation = mouse.dx < 0 ? LEFT : RIGHT; 
+        mouse.orientation = mouse.dx < 0 ? LEFT : RIGHT;
     }
     else
     {
         mouse.dy = mouse.dx;
         mouse.dx = 0;
-        mouse.orientation = mouse.dy < 0 ? SOUTH : NORTH; 
+        mouse.orientation = mouse.dy < 0 ? SOUTH : NORTH;
     }
 }
 
@@ -35,7 +35,7 @@ void turnMouseRight(Mouse &mouse)
     {
         mouse.dy = -mouse.dx;
         mouse.dx = 0;
-        mouse.orientation = mouse.dy < 0 ? SOUTH : NORTH; 
+        mouse.orientation = mouse.dy < 0 ? SOUTH : NORTH;
     }
 }
 
@@ -78,162 +78,342 @@ void initMaze(Maze &maze)
                 node.neighbors.push_front({i, j + 1});
             }
 
+            node.walls[0] = false;
+            node.walls[1] = false;
+            node.walls[2] = false;
+            node.walls[3] = false;
+
             maze.nodes[i * MAZE_SIZE + j] = node;
         }
     }
 }
 
-static bool whereTo(Mouse &mouse, Position pos, char &c){
+static bool whereTo(Mouse &mouse, Position pos, char &c)
+{
 
-    int offsetX =  pos.x - mouse.pos.x;
-    int offsetY =  pos.y - mouse.pos.y;
- 
-    switch(mouse.orientation){
-        case LEFT:
+    int offsetX = pos.x - mouse.pos.x;
+    int offsetY = pos.y - mouse.pos.y;
 
-            if(offsetY == 0){
-                if(offsetX == -1 && !API::wallFront()){
-                    c = 'f';
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if(offsetY == -1 && !API::wallLeft()){
-                    c = 'l';
-                    return true;
-                } else if(offsetY == 1 && !API::wallRight()){
-                    c = 'r';
-                    return true;
-                } else {
-                    return false;
-                }
+    switch (mouse.orientation)
+    {
+    case LEFT:
+
+        if (offsetY == 0)
+        {
+            if (offsetX == -1 && !API::wallFront())
+            {
+                c = 'f';
+                return true;
             }
-
-            break;
-
-        case RIGHT:
-
-            if(offsetY == 0){
-                if(offsetX == 1 && !API::wallFront()){
-                    c = 'f';
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if(offsetY == 1 && !API::wallLeft()){
-                    c = 'l';
-                    return true;
-                } else if(offsetY == -1 && !API::wallRight()){
-                    c = 'r';
-                    return true;
-                } else {
-                    return false;
-                }
+            else
+            {
+                return false;
             }
-
-            break;
-
-        case NORTH:
-
-            if(offsetX == 0){
-                if(offsetY == 1 && !API::wallFront()){
-                    c = 'f';
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if(offsetX == -1 && !API::wallLeft()){
-                    c = 'l';
-                    return true;
-                } else if(offsetX == 1 && !API::wallRight()){
-                    c = 'r';
-                    return true;
-                } else {
-                    return false;
-                }
+        }
+        else
+        {
+            if (offsetY == -1 && !API::wallLeft())
+            {
+                c = 'l';
+                return true;
             }
-
-            break;
-
-        case SOUTH:
-
-            if(offsetX == 0){
-                if(offsetY == -1 && !API::wallFront()){
-                    c = 'f';
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                if(offsetX == 1 && !API::wallLeft()){
-                    c = 'l';
-                    return true;
-                } else if(offsetX == -1 && !API::wallRight()){
-                    c = 'r';
-                    return true;
-                } else {
-                    return false;
-                }
+            else if (offsetY == 1 && !API::wallRight())
+            {
+                c = 'r';
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
 
-            break;
+        break;
 
-        default:
-            return false;
+    case RIGHT:
+
+        if (offsetY == 0)
+        {
+            if (offsetX == 1 && !API::wallFront())
+            {
+                c = 'f';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (offsetY == 1 && !API::wallLeft())
+            {
+                c = 'l';
+                return true;
+            }
+            else if (offsetY == -1 && !API::wallRight())
+            {
+                c = 'r';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        break;
+
+    case NORTH:
+
+        if (offsetX == 0)
+        {
+            if (offsetY == 1 && !API::wallFront())
+            {
+                c = 'f';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (offsetX == -1 && !API::wallLeft())
+            {
+                c = 'l';
+                return true;
+            }
+            else if (offsetX == 1 && !API::wallRight())
+            {
+                c = 'r';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        break;
+
+    case SOUTH:
+
+        if (offsetX == 0)
+        {
+            if (offsetY == -1 && !API::wallFront())
+            {
+                c = 'f';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (offsetX == 1 && !API::wallLeft())
+            {
+                c = 'l';
+                return true;
+            }
+            else if (offsetX == -1 && !API::wallRight())
+            {
+                c = 'r';
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        break;
+
+    default:
+        return false;
     }
 }
 
-char chooseNextStep(Mouse &mouse, Maze &maze){
+static Orientation inversOrentiation(Orientation orientationToInverse)
+{
+    switch (orientationToInverse)
+    {
+    case RIGHT:
+        return LEFT;
+        break;
+    case LEFT:
+        return RIGHT;
+        break;
+    case NORTH:
+        return SOUTH;
+        break;
+    default:
+        return NORTH;
+    }
+}
 
-    MazeNode * actualPosNode = &maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y];
+static Orientation relativeOrientationToReal(Mouse &mouse, Orientation orient)
+{
+    switch (mouse.orientation)
+    {
 
-    int min = 15; 
+    case RIGHT:
+        switch (orient)
+        {
+        case RIGHT:
+            return SOUTH;
+            break;
+        case LEFT:
+            return NORTH;
+            break;
+        case NORTH:
+            return RIGHT;
+            break;
+        default:
+            return LEFT;
+        }
+        break;
+
+    case LEFT:
+        switch (orient)
+        {
+        case RIGHT:
+            return NORTH;
+            break;
+        case LEFT:
+            return SOUTH;
+            break;
+        case NORTH:
+            return LEFT;
+            break;
+        default:
+            return RIGHT;
+        }
+        break;
+
+    case NORTH:
+        return orient;
+        break;
+
+    default:
+        return inversOrentiation(orient);
+    }
+}
+
+static void setNeighnourWall(Mouse &mouse, Maze &maze, Orientation wall)
+{
+
+    switch (relativeOrientationToReal(mouse, mouse.orientation))
+    {
+    case RIGHT:
+        if (mouse.pos.x + 1 < MAZE_SIZE)
+        {
+            maze.nodes[(mouse.pos.x + 1) * MAZE_SIZE + mouse.pos.y].walls[wall] = true;
+        }
+        break;
+    case LEFT:
+        if (mouse.pos.x - 1 >= 0)
+        {
+            maze.nodes[(mouse.pos.x - 1) * MAZE_SIZE + mouse.pos.y].walls[wall] = true;
+        }
+        break;
+    case NORTH:
+        if (mouse.pos.y + 1 < MAZE_SIZE)
+        {
+            maze.nodes[mouse.pos.x * MAZE_SIZE + (mouse.pos.y + 1)].walls[wall] = true;
+        }
+        break;
+    case SOUTH:
+        if (mouse.pos.y - 1 >= 0)
+        {
+            maze.nodes[mouse.pos.x * MAZE_SIZE + (mouse.pos.y - 1)].walls[wall] = true;
+        }
+        break;
+    }
+}
+
+void setWalls(Mouse &mouse, Maze &maze)
+{
+
+    if (API::wallFront())
+    {
+        maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[mouse.orientation] = true;
+        setNeighnourWall(mouse, maze, inversOrentiation(mouse.orientation));
+    }
+
+    if (API::wallLeft())
+    {
+        maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[relativeOrientationToReal(mouse, LEFT)] = true;
+        setNeighnourWall(mouse, maze, inversOrentiation(relativeOrientationToReal(mouse, LEFT)));
+    }
+
+    if (API::wallRight())
+    {
+        maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[relativeOrientationToReal(mouse, RIGHT)] = false;
+        setNeighnourWall(mouse, maze, inversOrentiation(relativeOrientationToReal(mouse, RIGHT)));
+    }
+}
+
+char chooseNextStep(Mouse &mouse, Maze &maze)
+{
+
+    MazeNode *actualPosNode = &maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y];
+
+    int min = 15;
     char returnDirection = '-';
 
-    for(auto &next : actualPosNode->neighbors){
+    for (auto &next : actualPosNode->neighbors)
+    {
 
-        if(!maze.nodes[next.x * MAZE_SIZE + next.y].mark){
+        if (!maze.nodes[next.x * MAZE_SIZE + next.y].mark)
+        {
             int newMin;
-            if((newMin = maze.nodes[next.x * MAZE_SIZE + next.y].distanceToCenter) < min){
+            if ((newMin = maze.nodes[next.x * MAZE_SIZE + next.y].distanceToCenter) < min)
+            {
 
-                if(whereTo(mouse, next, returnDirection)){
+                if (whereTo(mouse, next, returnDirection))
+                {
                     min = newMin;
                 }
             }
         }
     }
-    
+
     return returnDirection;
 }
 
-static bool isPosCenter(Position pos){
+static bool isPosCenter(Position pos)
+{
     return (pos.x == 7 || pos.x == 8) && (pos.y == 7 || pos.y == 8);
 }
 
 void floodFill(Mouse &mouse, Maze &maze, int x, int y)
 {
-     // Check if current cell is within maze bounds and not a wall or already visited
-    if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark || isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos)) {
+    // Check if current cell is within maze bounds and not a wall or already visited
+    if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark || isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos))
+    {
         return;
     }
-    
+
     // Mark current cell as visited
     maze.nodes[x * MAZE_SIZE + y].mark = true;
 
     // Recursively explore neighboring cells
-    
+
     // Check and move forward if no wall in front
-    if (!API::wallFront()) {
+    if (!API::wallFront())
+    {
         int newX = x + mouse.dx;
         int newY = y + mouse.dy;
         floodFill(mouse, maze, newX, newY);
     }
 
     // Check and turn left if no wall on the left
-    if (!API::wallLeft()) {
+    if (!API::wallLeft())
+    {
         // Adjust mouse orientation accordingly
         turnMouseLeft(mouse);
         // Recursively explore in the new direction
@@ -243,7 +423,8 @@ void floodFill(Mouse &mouse, Maze &maze, int x, int y)
     }
 
     // Check and turn right if no wall on the right
-    if (!API::wallRight()) {
+    if (!API::wallRight())
+    {
         // Adjust mouse orientation accordingly
         turnMouseRight(mouse);
         // Recursively explore in the new direction
@@ -253,9 +434,11 @@ void floodFill(Mouse &mouse, Maze &maze, int x, int y)
     }
 }
 
-void updateDistances(Maze &maze, Position pos, int distance) {
+void updateDistances(Maze &maze, Position pos, int distance)
+{
     // Verificar si la posición está dentro del laberinto y si la celda aún no ha sido visitada
-    if (pos.x < 0 || pos.x >= MAZE_SIZE || pos.y < 0 || pos.y >= MAZE_SIZE || maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter != -1) {
+    if (pos.x < 0 || pos.x >= MAZE_SIZE || pos.y < 0 || pos.y >= MAZE_SIZE || maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter != -1)
+    {
         return;
     }
 
@@ -270,7 +453,8 @@ void updateDistances(Maze &maze, Position pos, int distance) {
 }
 
 // Función para manejar cuando el ratón encuentra una pared en una celda adyacente
-void handleWallEncounter(Mouse &mouse, Maze &maze) {
+void handleWallEncounter(Mouse &mouse, Maze &maze)
+{
     // Actualizar las distancias al centro de las celdas adyacentes
     updateDistances(maze, {mouse.pos.x - 1, mouse.pos.y}, 1); // Izquierda
     updateDistances(maze, {mouse.pos.x + 1, mouse.pos.y}, 1); // Derecha

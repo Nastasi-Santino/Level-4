@@ -21,6 +21,8 @@ int main(void)
 
     while (true)
     {
+        setWalls(myMouse, myMaze);
+        
         switch(chooseNextStep(myMouse, myMaze)){
 
             case 'l':

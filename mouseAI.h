@@ -27,6 +27,7 @@ struct MazeNode
     Position pos;
     int distanceToCenter;
     bool mark;
+    std::array<bool, 4> walls;
     std::forward_list<Position> neighbors;
 };
 
@@ -41,6 +42,7 @@ void moveMouse(Mouse &mouse);
 void turnMouseLeft(Mouse &mouse);
 void turnMouseRight(Mouse &mouse);
 void initMaze(Maze &maze);
+void setWalls(Mouse &mouse, Maze &maze);
 char chooseNextStep(Mouse &mouse, Maze &maze);
 void floodFill(Mouse &mouse, Maze &maze, int x, int y);
 void updateDistances(Maze &maze, Position pos, int distance);
