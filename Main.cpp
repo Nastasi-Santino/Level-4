@@ -22,6 +22,20 @@ int main(void)
     while (true)
     {
         setWalls(myMouse, myMaze);
+
+        API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
+        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[RIGHT]){
+            API::setWall(myMouse.pos.x, myMouse.pos.y, 'e');
+        }
+        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[LEFT]){
+            API::setWall(myMouse.pos.x, myMouse.pos.y, 'w');
+        }
+        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[NORTH]){
+            API::setWall(myMouse.pos.x, myMouse.pos.y, 'n');
+        }
+        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[SOUTH]){
+            API::setWall(myMouse.pos.x, myMouse.pos.y, 's');
+        }
         
         switch(chooseNextStep(myMouse, myMaze)){
 
@@ -57,7 +71,7 @@ int main(void)
                 turnMouseRight(myMouse);
         }
         
-        API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
+        
         API::moveForward();
         moveMouse(myMouse);
         if(pivotActivated){

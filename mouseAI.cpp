@@ -237,7 +237,7 @@ static bool whereTo(Mouse &mouse, Position pos, char &c)
     }
 }
 
-static Orientation inversOrentiation(Orientation orientationToInverse)
+static Orientation inverseOrentiation(Orientation orientationToInverse)
 {
     switch (orientationToInverse)
     {
@@ -299,14 +299,14 @@ static Orientation relativeOrientationToReal(Mouse &mouse, Orientation orient)
         break;
 
     default:
-        return inversOrentiation(orient);
+        return inverseOrentiation(orient);
     }
 }
 
 static void setNeighnourWall(Mouse &mouse, Maze &maze, Orientation wall)
 {
 
-    switch (relativeOrientationToReal(mouse, mouse.orientation))
+    switch (inverseOrentiation(wall))
     {
     case RIGHT:
         if (mouse.pos.x + 1 < MAZE_SIZE)
@@ -328,7 +328,7 @@ static void setNeighnourWall(Mouse &mouse, Maze &maze, Orientation wall)
         break;
     case SOUTH:
         if (mouse.pos.y - 1 >= 0)
-        {
+        { 
             maze.nodes[mouse.pos.x * MAZE_SIZE + (mouse.pos.y - 1)].walls[wall] = true;
         }
         break;
@@ -341,19 +341,19 @@ void setWalls(Mouse &mouse, Maze &maze)
     if (API::wallFront())
     {
         maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[mouse.orientation] = true;
-        setNeighnourWall(mouse, maze, inversOrentiation(mouse.orientation));
+        setNeighnourWall(mouse, maze, inverseOrentiation(mouse.orientation));
     }
 
     if (API::wallLeft())
     {
         maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[relativeOrientationToReal(mouse, LEFT)] = true;
-        setNeighnourWall(mouse, maze, inversOrentiation(relativeOrientationToReal(mouse, LEFT)));
+        setNeighnourWall(mouse, maze, inverseOrentiation(relativeOrientationToReal(mouse, LEFT)));
     }
 
     if (API::wallRight())
     {
-        maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[relativeOrientationToReal(mouse, RIGHT)] = false;
-        setNeighnourWall(mouse, maze, inversOrentiation(relativeOrientationToReal(mouse, RIGHT)));
+        maze.nodes[mouse.pos.x * MAZE_SIZE + mouse.pos.y].walls[relativeOrientationToReal(mouse, RIGHT)] = true;
+        setNeighnourWall(mouse, maze, inverseOrentiation(relativeOrientationToReal(mouse, RIGHT)));
     }
 }
 
