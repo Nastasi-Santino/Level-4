@@ -1,3 +1,11 @@
+/**
+ * @brief Mighty Mouse.
+ **@author Nastasi Santino
+ * @author Renzo Amorbello
+ * @author Gregorio Matias Andrade
+ *
+ * @copyright Copyright (c) 2023-2024
+ */
 #include <iostream>
 #include <string>
 
@@ -24,16 +32,20 @@ int main(void)
         setWalls(myMouse, myMaze);
 
         API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
-        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[RIGHT]){
+        if (myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[RIGHT])
+        {
             API::setWall(myMouse.pos.x, myMouse.pos.y, 'e');
         }
-        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[LEFT]){
+        if (myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[LEFT])
+        {
             API::setWall(myMouse.pos.x, myMouse.pos.y, 'w');
         }
-        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[NORTH]){
+        if (myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[NORTH])
+        {
             API::setWall(myMouse.pos.x, myMouse.pos.y, 'n');
         }
-        if(myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[SOUTH]){
+        if (myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].walls[SOUTH])
+        {
             API::setWall(myMouse.pos.x, myMouse.pos.y, 's');
         }
 
@@ -63,59 +75,64 @@ int main(void)
         //         cerr << endl;
         //     }
         // }
-        
-        switch(chooseNextStep(myMouse, myMaze)){
 
-            case 'l':
-                noExitPath = false;
-                API::turnLeft();
-                turnMouseLeft(myMouse);
-                if(!pivotActivated){
-                    pivotActivated = true;
-                    pivot = {myMouse.pos.x + myMouse.dx, myMouse.pos.y + myMouse.dy};
-                }
-                break;
+        switch (chooseNextStep(myMouse, myMaze))
+        {
 
-            case 'r':
-                noExitPath = false;
-                API::turnRight();
-                turnMouseRight(myMouse);
-                break;
+        case 'l':
+            noExitPath = false;
+            API::turnLeft();
+            turnMouseLeft(myMouse);
+            if (!pivotActivated)
+            {
+                pivotActivated = true;
+                pivot = {myMouse.pos.x + myMouse.dx, myMouse.pos.y + myMouse.dy};
+            }
+            break;
 
-            case 'f':
-                if(noExitPath){
-                    myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
-                }
-                break;
+        case 'r':
+            noExitPath = false;
+            API::turnRight();
+            turnMouseRight(myMouse);
+            break;
 
-            default:
-                // En este caso, el ratón encontró una pared en una celda adyacente
+        case 'f':
+            if (noExitPath)
+            {
                 myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
-                noExitPath = true;
-                API::turnRight();
-                turnMouseRight(myMouse);
-                API::turnRight();
-                turnMouseRight(myMouse);
+            }
+            break;
+
+        default:
+            // En este caso, el ratón encontró una pared en una celda adyacente
+            myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
+            noExitPath = true;
+            API::turnRight();
+            turnMouseRight(myMouse);
+            API::turnRight();
+            turnMouseRight(myMouse);
         }
-        
-        
+
         API::moveForward();
         moveMouse(myMouse);
-        if(pivotActivated){
+        if (pivotActivated)
+        {
             pivotCheck++;
-            if(myMouse.pos.x == pivot.x && myMouse.pos.y == pivot.y){
+            if (myMouse.pos.x == pivot.x && myMouse.pos.y == pivot.y)
+            {
                 pivotCount++;
                 pivotCheck = 0;
             }
-            if(pivotCount == 4){
+            if (pivotCount == 4)
+            {
                 pivotCount = 0;
                 pivotActivated = false;
                 myMaze.nodes[pivot.x * MAZE_SIZE + pivot.y].mark = true;
             }
-            if(pivotCheck == 10){
+            if (pivotCheck == 10)
+            {
                 pivotCount = 0;
                 pivotActivated = false;
-
             }
         }
     }
