@@ -487,7 +487,7 @@ static bool isPosCenter(Position pos)
  */
 bool floodFill(Mouse &mouse, Maze &maze, int x, int y, int &dist)
 {
-    // Check if current cell is within maze bounds and not a wall or already visited
+    // Check if current cell is within maze bounds and not a wall, or the center.
     if (x < 0 || x >= MAZE_SIZE || y < 0 || y >= MAZE_SIZE || maze.nodes[x * MAZE_SIZE + y].mark || isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos))
     {
         if (isPosCenter(maze.nodes[x * MAZE_SIZE + y].pos))
@@ -500,6 +500,8 @@ bool floodFill(Mouse &mouse, Maze &maze, int x, int y, int &dist)
             return false;
         }
     }
+
+    // Si llega a la altura del centro, giramos el raton para que vaya hacia el centro.
 
     if ((x == 7 || x == 8) && mouse.dx != 0)
     {
@@ -593,31 +595,3 @@ bool floodFill(Mouse &mouse, Maze &maze, int x, int y, int &dist)
 
     return false;
 }
-
-// void updateDistances(Maze &maze, Position pos, int distance)
-// {
-//     // Verificar si la posición está dentro del laberinto y si la celda aún no ha sido visitada
-//     if (pos.x < 0 || pos.x >= MAZE_SIZE || pos.y < 0 || pos.y >= MAZE_SIZE || maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter != -1)
-//     {
-//         return;
-//     }
-
-//     // Actualizar la distancia al centro de la celda
-//     maze.nodes[pos.x * MAZE_SIZE + pos.y].distanceToCenter = distance;
-
-//     // Propagar la actualización recursivamente a las celdas adyacentes
-//     updateDistances(maze, {pos.x - 1, pos.y}, distance + 1); // Izquierda
-//     updateDistances(maze, {pos.x + 1, pos.y}, distance + 1); // Derecha
-//     updateDistances(maze, {pos.x, pos.y - 1}, distance + 1); // Arriba
-//     updateDistances(maze, {pos.x, pos.y + 1}, distance + 1); // Abajo
-// }
-
-// // Función para manejar cuando el ratón encuentra una pared en una celda adyacente
-// void handleWallEncounter(Mouse &mouse, Maze &maze)
-// {
-//     // Actualizar las distancias al centro de las celdas adyacentes
-//     updateDistances(maze, {mouse.pos.x - 1, mouse.pos.y}, 1); // Izquierda
-//     updateDistances(maze, {mouse.pos.x + 1, mouse.pos.y}, 1); // Derecha
-//     updateDistances(maze, {mouse.pos.x, mouse.pos.y - 1}, 1); // Arriba
-//     updateDistances(maze, {mouse.pos.x, mouse.pos.y + 1}, 1); // Abajo
-// }

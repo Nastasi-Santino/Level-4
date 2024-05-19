@@ -16,19 +16,24 @@ using namespace std;
 
 int main(void)
 {
-
+    // Creamos un raton y un laberinto
     Mouse myMouse = {{0, 0}, 0, 1, NORTH};
     Maze myMaze;
+
+    // algunas variables para casos limites.
     bool noExitPath = false;
     Position pivot;
     int pivotCount = 0;
     bool pivotActivated = false;
     int pivotCheck = 0;
 
+    // inicializamos el laberinto
     initMaze(myMaze);
 
     while (true)
     {
+
+        // Guardamos las paredes en el laberinto, y las pintamos en el laberinto.
         setWalls(myMouse, myMaze);
 
         API::setColor(myMouse.pos.x, myMouse.pos.y, 'G');
@@ -49,85 +54,65 @@ int main(void)
             API::setWall(myMouse.pos.x, myMouse.pos.y, 's');
         }
 
-        // if(API::wallFront()){
-        //     int dist = 0;
-        //     Orientation mouseOrient = myMouse.orientation;
-        //     turnMouseLeft(myMouse);
-        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
-        //     while(myMouse.orientation != mouseOrient){
-        //         turnMouseRight(myMouse);
-        //     }
-        //     turnMouseLeft(myMouse);
-        //     turnMouseLeft(myMouse);
-        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
-        //     while(myMouse.orientation != mouseOrient){
-        //         turnMouseRight(myMouse);
-        //     }
-        //     turnMouseRight(myMouse);
-        //     floodFill(myMouse, myMaze, myMouse.pos.x, myMouse.pos.y, dist);
-        //     while(myMouse.orientation != mouseOrient){
-        //         turnMouseRight(myMouse);
-        //     }
-        //     for(int i = 0; i < MAZE_SIZE; i++){
-        //         for(int j = 0; j < MAZE_SIZE; j++){
-        //             cerr << myMaze.nodes[i * MAZE_SIZE + j].distanceToCenter << "  ";
-        //         }
-        //         cerr << endl;
-        //     }
-        // }
-
+        // Buscamos el siguiente paso.
         switch (chooseNextStep(myMouse, myMaze))
         {
 
+        // Caso girar a izquierda.
         case 'l':
             noExitPath = false;
             API::turnLeft();
             turnMouseLeft(myMouse);
-            if (!pivotActivated)
+            if (!pivotActivated) // si el pivote no esta activado
             {
-                pivotActivated = true;
-                pivot = {myMouse.pos.x + myMouse.dx, myMouse.pos.y + myMouse.dy};
+                pivotActivated = true;                                            // lo activo
+                pivot = {myMouse.pos.x + myMouse.dx, myMouse.pos.y + myMouse.dy}; // y pongo la posicion siguiente como pivote.
             }
             break;
 
+        // Caso girar a derecha.
         case 'r':
             noExitPath = false;
             API::turnRight();
             turnMouseRight(myMouse);
             break;
 
+        // Caso seguir hacia adelante.
         case 'f':
-            if (noExitPath)
+            if (noExitPath) // si estamos saliendo de un callejon si salida, marcamos las casillas
             {
                 myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
             }
             break;
 
         default:
-            // En este caso, el ratón encontró una pared en una celda adyacente
-            myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true;
-            noExitPath = true;
+            // En este caso, el ratón encontró una pared en todas las celdas adyacentes
+            myMaze.nodes[myMouse.pos.x * MAZE_SIZE + myMouse.pos.y].mark = true; // Marcamos la casilla para no volver.
+            noExitPath = true;                                                   // Activamos el flag para indicar que estamos en un callejon sin salida. Se desactiva cuando giras.
             API::turnRight();
             turnMouseRight(myMouse);
             API::turnRight();
             turnMouseRight(myMouse);
         }
 
+        // Movemos el raton.
         API::moveForward();
         moveMouse(myMouse);
+
+        // Si el pivote esta activado
         if (pivotActivated)
         {
-            pivotCheck++;
-            if (myMouse.pos.x == pivot.x && myMouse.pos.y == pivot.y)
+            pivotCheck++;                                             // cuento cuantas veces revise el pivote.
+            if (myMouse.pos.x == pivot.x && myMouse.pos.y == pivot.y) // si el raton esta sobre el pivote aumento el contador.
             {
                 pivotCount++;
-                pivotCheck = 0;
+                pivotCheck = 0; // reinicio el contador de revisar.
             }
-            if (pivotCount == 4)
+            if (pivotCount == 4) // si llega 4 veces al mismo lugar, esta en un loop.
             {
                 pivotCount = 0;
                 pivotActivated = false;
-                myMaze.nodes[pivot.x * MAZE_SIZE + pivot.y].mark = true;
+                myMaze.nodes[pivot.x * MAZE_SIZE + pivot.y].mark = true; // marco la posicion.
             }
             if (pivotCheck == 10)
             {

@@ -6,8 +6,6 @@
 * Renzo Amorbello: programador.
 * Gregorio Matias Andrade: programador.
 
-Nombre del equipo: .
-
 ## Estructura.
 
 Lo primero que hicimos fue crear implementaciones tanto del raton como del laberinto, para ir guardando la informacion del raton con respecto al laberinto. El primer problema que nos encontramos fue al modelar el movimiento del raton, puesto que la izquierda y derecha del raton cambia constantemente segun hacia donde mira el raton. Para resolver este problema implementamos la orientacion como informacion del raton.
@@ -20,4 +18,4 @@ A la hora de guardar la ubicacion de las paredes nos encontramos con otro proble
 
 En un comienzo se nos ocurrio intentar que el algoritmo funciones sin implementar las paredes, es decir, si el raton se encuentra una pared hace los calculos pertinentes y elige que hacer, sin guardar la informacion de que se encontro una pared. Lo cual resulta muy ineficaz, ya que el raton pierde toda capacidad de memoria y termina encontrandose muchas veces con un mismo obstaculo.
 
-## Documentación adicional
+Primero inicializamos todas las distancias al centro suponiendo que no habia paredes, y agregamos la funcion chooseNextStep que elige al vecino con menor distancia al centro. Habiendo realizado eso teniamos en mente hacer una funcion que actualice las distancias de las distintas casillas teniendo en cuenta paredes previamente alcanzadas. Sin embargo, antes de hacer esta funcion, vimos que ya llegaba al centro en varios casos.
